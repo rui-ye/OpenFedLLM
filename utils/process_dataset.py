@@ -48,8 +48,9 @@ def process_sft_dataset(dataset_name, dataset, dataset_sample):
     else:
         raise NotImplementedError(f"Dataset {dataset_name} is not supported.")
     dataset = dataset.shuffle(seed=2023)
-    num_sample = min(len(dataset), dataset_sample)
-    dataset = dataset.select(range(num_sample))
+    if dataset_sample:
+        num_sample = min(len(dataset), dataset_sample)
+        dataset = dataset.select(range(num_sample))
     print(f">> ===== After processing, Dataset {dataset_name} has {len(dataset)} examples. =====")
     return dataset
 
@@ -70,8 +71,9 @@ def process_dpo_dataset(dataset_name, dataset, template_name, dataset_sample):
         dataset = dataset.remove_columns(['prompt_id', 'messages', 'score_chosen', 'score_rejected'])
     
     dataset = dataset.shuffle(seed=2023)
-    num_sample = min(len(dataset), dataset_sample)
-    dataset = dataset.select(range(num_sample))
+    if dataset_sample:
+        num_sample = min(len(dataset), dataset_sample)
+        dataset = dataset.select(range(num_sample))
     print(f">> ===== After processing, Dataset {dataset_name} has {len(dataset)} examples. =====")
     print(f">> ===== Data Example =====")
     print(dataset[0])
