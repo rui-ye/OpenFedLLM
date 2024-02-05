@@ -1,11 +1,11 @@
 # OpenFedLLM: Training Large Language Models on Decentralized Private Data via Federated Learning
 
-OpenFedLLM is an open-source research-use codebase for training large lanugage models via federated learning.
+**OpenFedLLM** is an open-source research-use codebase for training *Large Lanugage Models (LLM)* via federated learning.
 
 OpenFedLLM includes the following key features:
-- 7 federated learning algorithms (e.g., FedAvg, FedProx, SCAFFOLD, FedAvgM).
-- 2 LLM training algorithms, inckuding instruction tuning (i.e., SFT) and value alignment (i.e., DPO).
-- 30+ evaluation metrics covering general capabilities, medical QA, financial QA, code generation, and math solving.
+- 7 **federated learning** algorithms (e.g., *FedAvg*, *FedProx*, *SCAFFOLD*, *FedAvgM*, etc.).
+- 2 **LLM training** algorithms, including instruction tuning (i.e. *SFT*) and value alignment (i.e., *DPO*).
+- 30+ **evaluation metrics** covering *general capabilities*, *medical QA*, *financial QA*, *code generation*, *math solving*, and more.
 
 ## Setup
 
@@ -20,7 +20,7 @@ pip install -r requirements.txt
 
 ## Training
 
-We provide training scripts under `training_scripts/`.
+We provide training scripts under `training_scripts/`. Try them out from the top-level directory of this repository.
 
 ### Federated Instruction Tuning
 
@@ -49,13 +49,13 @@ CUDA_VISIBLE_DEVICES=1 python main_sft.py \
 
 Key arguments:
 
-- model_name_or_path: the name or local location of your base model
-- template: template for chatting. Define your own template in `utils/template.py`.
-- dataset_name: the name of dataset. You may modify `utils/process_dataset.py` if your interested dataset has not been supported.
-- dataset_sample: needed if you want to sample a specific number of samples from the original dataset.
-- fed_alg: the name of federated learning algorithm
-- num_clients/sample_clients: `num_clients` clients in total, `sample_clients` clients for each round
-- max_steps: the number of model update steps for one client at each round.
+- `model_name_or_path`: the name or local location of your base model
+- `template`: template for chatting. Define your own template in `utils/template.py`.
+- `dataset_name`: the name of dataset. You may modify `utils/process_dataset.py` if your interested dataset has not been supported.
+- `dataset_sample`: needed if you want to sample a specific number of samples from the original dataset.
+- `fed_alg`: the name of federated learning algorithm
+- `num_clients`/sample_clients: `num_clients` clients in total, `sample_clients` clients for each round
+- `max_steps`: the number of model update steps for one client at each round.
 
 ### Federated Value Alignment
 
@@ -65,7 +65,7 @@ The training script is in `training_scripts/run_dpo.sh`.
 python main_dpo.py --template "vicuna_v1.1"
 ```
 
-Note that the main difference between the usage of `main_sft.py` and `main_dpo.py` lies on the `template` argument. We plan to make them consistent in the future.
+Note that the main difference between the usage of `main_sft.py` and `main_dpo.py` lies in the `template` argument. We plan to make them consistent in the future.
 - For SFT, templates are defined in `utils/template.py`
 - For DPO, templates are defined in `utils/conversation.py`
 
@@ -76,3 +76,5 @@ Evaluation codes are put in `evaluation/` directory. Most of our evaluations fol
 For example, `evaluation/open_ended/` include open-ended evaluations on three benchmarks, covering MT-Bench, Vicuna Bench, and AdvBench; see [README.md](evaluation/open_ended/README.md).
 
 ## Citation
+
+Incoming part.
