@@ -24,10 +24,6 @@ def get_auxiliary_dict(fed_args, global_dict):
         auxiliary_model_list = [copy.deepcopy(global_auxiliary) for _ in range(fed_args.num_clients)]    # c_i in SCAFFOLD
         auxiliary_delta_dict = [copy.deepcopy(global_auxiliary) for _ in range(fed_args.num_clients)]    # delta c_i in SCAFFOLD
 
-        # global_auxiliary = copy.deepcopy(global_dict) 
-        # auxiliary_model_list = [copy.deepcopy(global_dict) for _ in range(fed_args.num_clients)]
-        # auxiliary_delta_dict = [copy.deepcopy(global_dict) for _ in range(fed_args.num_clients)]
-
     else:
         global_auxiliary = None
         auxiliary_model_list = [None]*fed_args.num_clients

@@ -15,5 +15,5 @@ def get_dataset_this_round(dataset, round, fed_args, script_args):
     random.seed(round)
     random_idx = random.sample(range(0, len(dataset)), num2sample)
     dataset_this_round = dataset.select(random_idx)
-    # print('The first sample:', dataset_this_round[0])
+
     return dataset_this_round

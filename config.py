@@ -57,7 +57,6 @@ class ScriptArguments:
     gradient_checkpointing: Optional[bool] = field(default=True, metadata={"help": "Enable gradient checkpointing"})
     template: Optional[str] = field(default="alpaca", metadata={"help": "the template to use"})
     seed: Optional[int] = field(default=2023, metadata={"help": "the seed to use"})
-    # auth_token_path: Optional[str] = field(default="utils/hf_token.yaml", metadata={"help": "the path to the auth token"})
     dpo_beta: Optional[float] = field(default=0.1, metadata={"help": "the beta parameter of DPO"})
     dataset_sample: Optional[int] = field(default=20000, metadata={"help": "the number of samples to use from the dataset"})
     local_data_dir: Optional[str] = field(default=None, metadata={"help": "the local data directory if you want to use downloaded data"})

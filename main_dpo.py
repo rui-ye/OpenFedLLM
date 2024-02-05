@@ -40,14 +40,18 @@ model = AutoModelForCausalLM.from_pretrained(
     torch_dtype=torch_dtype,
 )
 
-# model_ref = AutoModelForCausalLM.from_pretrained(
-#     script_args.model_name_or_path,
-#     quantization_config=quantization_config,
-#     device_map=device_map,
-#     trust_remote_code=script_args.trust_remote_code,
-#     torch_dtype=torch_dtype,
-# )
-model_ref = None
+if script_args.use_peft == True:
+    model_ref = None
+else:
+    # construct a reference model with the identical original parameters
+    # e.g. DPO need a reference model to compute the discrepancy loss
+    model_ref = AutoModelForCausalLM.from_pretrained(
+        script_args.model_name_or_path,
+        quantization_config=quantization_config,
+        device_map=device_map,
+        trust_remote_code=script_args.trust_remote_code,
+        torch_dtype=torch_dtype,
+    )
 
 if script_args.load_in_8bit or script_args.load_in_4bit:
     model = prepare_model_for_kbit_training(
