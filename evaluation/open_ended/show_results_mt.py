@@ -90,8 +90,6 @@ def display_result_pairwise(args):
     df["win_rate_adjusted"] = (df["win"] + 0.5 * df["tie"]) / (
         df["win"] + df["loss"] + df["tie"]
     )
-    # print(df.sort_values(by="win_rate", ascending=False))
-    # print(df.sort_values(by="loss_rate", ascending=True))
     print(df.sort_values(by="win_rate_adjusted", ascending=False))
 
 
