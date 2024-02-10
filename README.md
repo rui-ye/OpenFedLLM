@@ -7,6 +7,10 @@ OpenFedLLM includes the following key features:
 - 2 **LLM training** algorithms, including instruction tuning (i.e. *SFT*) and value alignment (i.e., *DPO*).
 - 30+ **evaluation metrics** covering *general capabilities*, *medical QA*, *financial QA*, *code generation*, *math solving*, and more.
 
+
+![intro](doc/assets/openfedllm-intro.png)
+
+
 ## Setup
 
 Clone the repo and install the required packages.
