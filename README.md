@@ -1,6 +1,6 @@
 # OpenFedLLM: Training Large Language Models on Decentralized Private Data via Federated Learning
 
-**OpenFedLLM** is an open-source research-use codebase for training *Large Lanugage Models (LLM)* via federated learning. Please check our [paper](https://arxiv.org/abs/2402.06954) for details and the corresponding empirical study.
+**OpenFedLLM** is an open-source research-use codebase for training *Large Language Models (LLM)* via federated learning. Please check our [paper](https://arxiv.org/abs/2402.06954) for details and the corresponding empirical study.
 
 OpenFedLLM includes the following key features:
 - 7 **federated learning** algorithms (e.g., *FedAvg*, *FedProx*, *SCAFFOLD*, *FedAvgM*, etc.).
