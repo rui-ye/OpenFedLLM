@@ -27,7 +27,7 @@ We use single-answer grading setting here, where GPT-4 directly give a score on 
 
 ```
 export OPENAI_API_KEY=XXXXXX  # set the OpenAI API key
-python judge_mtbench.py --judge_model gpt-4-1106-preview --model_list [LIST-OF-MODEL-ID] --parallel [num-concurrent-api-call]   # GPT-4-Turbo
+python gen_judge_mtbench.py --judge_model gpt-4-1106-preview --model_list [LIST-OF-MODEL-ID] --parallel [num-concurrent-api-call]   # GPT-4-Turbo
 ```
 
 The judgments will be saved to `data/mtbench/model_judgment/gpt-4-1106-preview_single.jsonl`
@@ -36,7 +36,7 @@ The judgments will be saved to `data/mtbench/model_judgment/gpt-4-1106-preview_s
 
 - Show the scores for selected models
   ```
-  python show_result.py --model_list [LIST-OF-MODEL-ID]
+  python show_results_mt.py --model_list [LIST-OF-MODEL-ID]
   ```
 - Show all scores
   ```

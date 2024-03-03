@@ -115,7 +115,7 @@ else:
         output_ids = output_ids[0][len(input_ids[0]):]
         result = tokenizer.decode(output_ids, skip_special_tokens=True)
         example['output'] = result
-        example['generator'] = exp_name
+        example['generator'] = model_name
 
         print(f"\nInput: \n{instruction}")
         print(f"\nOutput: \n{result}")
