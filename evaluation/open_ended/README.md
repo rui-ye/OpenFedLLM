@@ -36,11 +36,11 @@ The judgments will be saved to `data/mtbench/model_judgment/gpt-4-1106-preview_s
 
 - Show the scores for selected models
   ```
-  python show_results_mt.py --model_list [LIST-OF-MODEL-ID]
+  python show_results_mt.py --model_list [LIST-OF-MODEL-ID] --judge_model gpt-4-1106-preview
   ```
 - Show all scores
   ```
-  python show_result.py
+  python show_results_mt.py 
   ```
 
 ## Vicuna and AdvBench
