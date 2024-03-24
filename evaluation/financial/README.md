@@ -29,5 +29,5 @@ CUDA_VISIBLE_DEVICES=<CUDA_DEVICES> python benchmarks/fingpt_bench.py \
 ```
 
 ## Note
-* For more information, please go to the origin repository we fork from: [FinGPT](https://github.com/AI4Finance-Foundation/FinGPT), or you can look up the original version of [FinGPT README](https://github.com/AI4Finance-Foundation/FinGPT/blob/master/README.md). 
+* For more information, please go to the origin repository we fork from: [FinGPT](https://github.com/AI4Finance-Foundation/FinGPT) (commit id: b7cf2d1656ae12557b14e1a0bc4ebb7f916b783f), or you can look up the original version of [FinGPT README](https://github.com/AI4Finance-Foundation/FinGPT/blob/master/README.md). 
 * [@wwh0411](https://github.com/wwh0411) simplifies the code for our usage.
