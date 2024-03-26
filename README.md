@@ -13,13 +13,15 @@ OpenFedLLM includes the following key features:
 
 ## Setup
 
-Clone the repo and install the required packages.
+Clone the repo, submodules and install the required packages.
+
 ```
-git clone https://github.com/rui-ye/OpenFedLLM.git
+git clone --recursive --shallow-submodules https://github.com/rui-ye/OpenFedLLM.git
 cd OpenFedLLM
 conda create -n fedllm python=3.10
 conda activate fedllm
 pip install -r requirements.txt
+source setup.sh
 ```
 
 ## Training

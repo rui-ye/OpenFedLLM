@@ -1,0 +1,3 @@
+[submodule "evaluation/FinGPT"]
+	path = evaluation/FinGPT
+	url = https://github.com/AI4Finance-Foundation/FinGPT
