@@ -44,6 +44,11 @@ if script_args.load_in_8bit or script_args.load_in_4bit:
 model = get_peft_model(model, peft_config)
 model.print_trainable_parameters()
 
+model.config.use_cache = False  # silence the warnings. Please re-enable for inference!
+
+if training_args.gradient_checkpointing:
+    model.enable_input_require_grads()
+
 # ===== Define the global and local models =====
 global_dict = copy.deepcopy(get_peft_model_state_dict(model))
 local_dict_list = [copy.deepcopy(global_dict) for i in range(fed_args.num_clients)]
@@ -114,7 +119,7 @@ for round in tqdm(range(fed_args.num_rounds)):
     set_peft_model_state_dict(model, global_dict)   # Update global model
 
     # ===== Save the model =====
-    if (round+1) % 50 == 0:
+    if (round+1) % fed_args.save_model_freq == 0:
         trainer.save_model(os.path.join(script_args.output_dir, f"checkpoint-{round+1}"))
     
     np.save(os.path.join(script_args.output_dir, "training_loss.npy"), np.array(training_loss))

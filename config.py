@@ -22,6 +22,7 @@ class FedArguments:
     fedopt_eta: Optional[float] = field(default=1e-3, metadata={"help": "the global learning rate parameter of FedAdagrad, FedYogi and FedAdam"})
     fedopt_beta1: Optional[float] = field(default=0.9, metadata={"help": "the beta1 parameter of FedYogi and FedAdam"})
     fedopt_beta2: Optional[float] = field(default=0.99, metadata={"help": "the beta2 parameter of FedYogi and FedAdam"})
+    save_model_freq: Optional[int] = field(default=50, metadata={"help": "the frequency to save the model. 50 means save every 50 rounds"})
 
 @dataclass
 class ScriptArguments:
@@ -102,9 +103,19 @@ def get_training_args(script_args, new_lr):
 def get_model_config(script_args):
     if script_args.load_in_8bit and script_args.load_in_4bit:
         raise ValueError("You can't load the model in 8 bits and 4 bits at the same time")
-    elif script_args.load_in_8bit or script_args.load_in_4bit:
+    elif script_args.load_in_8bit:
         quantization_config = BitsAndBytesConfig(
-            load_in_8bit=script_args.load_in_8bit, load_in_4bit=script_args.load_in_4bit
+            load_in_8bit=script_args.load_in_8bit
+        )
+        # Copy the model to each device
+        device_map = {"": Accelerator().local_process_index}
+        torch_dtype = torch.bfloat16
+    elif script_args.load_in_4bit:
+        quantization_config = BitsAndBytesConfig(
+            load_in_4bit=script_args.load_in_4bit,
+            bnb_4bit_use_double_quant=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=torch.bfloat16,
         )
         # Copy the model to each device
         device_map = {"": Accelerator().local_process_index}
