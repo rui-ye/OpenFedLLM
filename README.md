@@ -10,6 +10,8 @@ OpenFedLLM includes the following key features:
 
 ![intro](doc/assets/openfedllm-intro.png)
 
+## News🔥
+- **2024-06:** We released the first realistic benchmark for FedLLM: FedLLM-Bench. Check the [Paper](https://arxiv.org/pdf/2406.04845) | [Code](https://github.com/rui-ye/FedLLM-Bench).
 
 ## Setup
 
