@@ -1,9 +1,11 @@
 import copy
 import os
+os.environ['HF_HOME'] = '/lcrc/project/NEXTGENOPT/yijiang/cache'
 from tqdm import tqdm
 import numpy as np
 
-from transformers import AutoModelForCausalLM, AutoTokenizer
+import torch
+from transformers import LlamaForCausalLM, OPTForCausalLM, AutoModelForCausalLM, AutoTokenizer
 from trl import DataCollatorForCompletionOnlyLM
 from peft import get_peft_model, get_peft_model_state_dict, set_peft_model_state_dict, prepare_model_for_kbit_training
 
@@ -31,17 +33,21 @@ device_map, quantization_config, torch_dtype = get_model_config(script_args)
 # ===== Get model =====
 model = AutoModelForCausalLM.from_pretrained(
     script_args.model_name_or_path,
-    quantization_config=quantization_config,
-    device_map=device_map,
+    cache_dir='/lcrc/project/NEXTGENOPT/yijiang/cache',
+    # quantization_config=quantization_config,
+    # device_map=device_map,
     trust_remote_code=script_args.trust_remote_code,
     torch_dtype=torch_dtype,
 )
+# model = LlamaForCausalLM.from_pretrained(script_args.model_name_or_path, torch_dtype='auto', cache_dir='/lcrc/project/NEXTGENOPT/yijiang/cache')
 
+# ===== Load quantized LLM if specified =====
 if script_args.load_in_8bit or script_args.load_in_4bit:
     model = prepare_model_for_kbit_training(
                 model, use_gradient_checkpointing=training_args.gradient_checkpointing
             )
 
+# ===== Apply parameter-efficient fine-tuning =====
 model = get_peft_model(model, peft_config)
 model.print_trainable_parameters()
 
@@ -57,7 +63,7 @@ proxy_dict, opt_proxy_dict = get_proxy_dict(fed_args, global_dict)
 global_auxiliary, auxiliary_model_list, auxiliary_delta_dict = get_auxiliary_dict(fed_args, global_dict)
 
 # ===== Define the tokenizer =====
-tokenizer = AutoTokenizer.from_pretrained(script_args.model_name_or_path, use_fast=False, padding_side="right")
+tokenizer = AutoTokenizer.from_pretrained(script_args.model_name_or_path, use_fast=False, padding_side="right", cache_dir='/lcrc/project/NEXTGENOPT/yijiang/cache')
 if tokenizer.pad_token is None:
     tokenizer.pad_token = tokenizer.unk_token   # following vicuna
 
@@ -74,6 +80,9 @@ for round in tqdm(range(fed_args.num_rounds)):
     clients_this_round = get_clients_this_round(fed_args, round)
 
     print(f">> ==================== Round {round+1} : {clients_this_round} ====================")
+
+    print(torch.cuda.is_available())
+    print(torch.cuda.current_device())
     
     for client in range(fed_args.num_clients):
 
