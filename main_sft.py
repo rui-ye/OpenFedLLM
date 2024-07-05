@@ -28,6 +28,7 @@ sample_num_list = [len(local_datasets[i]) for i in range(fed_args.num_clients)]
 # ===== Get model config =====
 device_map, quantization_config, torch_dtype = get_model_config(script_args)
 
+# ===== Get model =====
 model = AutoModelForCausalLM.from_pretrained(
     script_args.model_name_or_path,
     quantization_config=quantization_config,
