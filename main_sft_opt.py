@@ -8,6 +8,7 @@ import torch
 from transformers import OPTForCausalLM, AutoTokenizer
 from trl import DataCollatorForCompletionOnlyLM
 from peft import get_peft_model, get_peft_model_state_dict, set_peft_model_state_dict, prepare_model_for_kbit_training
+import wandb
 
 from utils import *
 from federated_learning import *
@@ -17,17 +18,17 @@ from config import get_config, save_config, get_model_config, get_training_args
 python main_sft_opt.py \
     --model_name_or_path facebook/opt-125m \
     --dataset_name vicgalle/alpaca-gpt4 \
-    --dataset_sample 2000 \
+    --dataset_sample 10000 \
     --fed_alg fedavg \
     --num_clients 10 \
     --sample_clients 2 \
     --max_steps 10 \
-    --num_rounds 10 \
-    --batch_size 16 \
+    --num_rounds 100 \
+    --batch_size 32 \
     --gradient_accumulation_steps 1 \
     --seq_length 512 \
-    --peft_lora_r 8 \
-    --peft_lora_alpha 16 \
+    --peft_lora_r 32 \
+    --peft_lora_alpha 32 \
     --use_peft \
     --output_dir ./output \
     --template alpaca
@@ -38,6 +39,9 @@ script_args, fed_args, peft_config = get_config()
 training_args = get_training_args(script_args, script_args.learning_rate)
 save_config(script_args, fed_args)
 print(script_args, fed_args)
+
+# Initialize wandb with your project and optionally your API key
+wandb.init(project='main_sft_opt', config=script_args)
 
 # ===== Load the dataset =====
 dataset = get_dataset(script_args.dataset_name, script_args.local_data_dir)
@@ -113,6 +117,7 @@ for round in tqdm(range(fed_args.num_rounds)):
 
         if client not in clients_this_round:
             training_loss[client].append(-1)            # -1 is an indicator of not training
+            # wandb.log({f'Training Loss Client {client}': training_loss[client][-1]})
             continue
 
         if script_args.use_peft:
@@ -141,6 +146,7 @@ for round in tqdm(range(fed_args.num_rounds)):
 
         results = trainer.train()
         training_loss[client].append(results.training_loss)
+        wandb.log({f'Training Loss Client {client}': training_loss[client][-1]})
 
         # ===== Client transmits local information to server =====
         if fed_args.fed_alg == 'scaffold':
@@ -165,5 +171,11 @@ for round in tqdm(range(fed_args.num_rounds)):
     # ===== Save the model =====
     if (round+1) % fed_args.save_model_freq == 0:
         trainer.save_model(os.path.join(script_args.output_dir, f"checkpoint-{round+1}"))
+
+        # Log the saved model to wandb
+        wandb.save(os.path.join(script_args.output_dir, f"checkpoint-{round+1}"))
     
     np.save(os.path.join(script_args.output_dir, "training_loss.npy"), np.array(training_loss))
+
+# Finalize wandb at the end of the script
+wandb.finish()
