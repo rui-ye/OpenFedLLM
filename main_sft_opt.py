@@ -27,9 +27,9 @@ python main_sft_opt.py \
     --batch_size 16 \
     --gradient_accumulation_steps 1 \
     --seq_length 512 \
-    --peft_lora_r 32 \
-    --peft_lora_alpha 32 \
-    --use_peft False \
+    --peft_lora_r 256 \
+    --peft_lora_alpha 256 \
+    --use_peft True \
     --output_dir ./output \
     --template alpaca
 """
@@ -57,10 +57,6 @@ device_map, quantization_config, torch_dtype = get_model_config(script_args)
 # ===== Get model =====
 model = OPTForCausalLM.from_pretrained(
     script_args.model_name_or_path,
-    # cache_dir='/lcrc/project/NEXTGENOPT/yijiang/cache',
-    # quantization_config=quantization_config,
-    # device_map=device_map,
-    # trust_remote_code=script_args.trust_remote_code,
     torch_dtype='auto',
 )
 
