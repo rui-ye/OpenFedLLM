@@ -16,19 +16,19 @@ from config import get_config, save_config, get_model_config, get_training_args
 
 """
 python main_sft_opt.py \
-    --model_name_or_path facebook/opt-125m \
-    --dataset_name vicgalle/alpaca-gpt4 \
+    --model_name_or_path facebook/opt-1.3b \
+    --dataset_name gbharti/finance-alpaca \
     --dataset_sample 20000 \
     --fed_alg fedavg \
     --num_clients 10 \
-    --sample_clients 2 \
+    --sample_clients 5 \
     --max_steps 10 \
     --num_rounds 100 \
     --batch_size 16 \
     --gradient_accumulation_steps 1 \
     --seq_length 512 \
-    --peft_lora_r 256 \
-    --peft_lora_alpha 256 \
+    --peft_lora_r 32 \
+    --peft_lora_alpha 64 \
     --use_peft True \
     --output_dir ./output \
     --template alpaca
