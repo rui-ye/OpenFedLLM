@@ -1,0 +1,124 @@
+wandb_version: 1
+
+model_name_or_path:
+  desc: null
+  value: facebook/opt-1.3b
+dataset_name:
+  desc: null
+  value: gbharti/finance-alpaca
+log_with:
+  desc: null
+  value: none
+learning_rate:
+  desc: null
+  value: 2.0e-05
+batch_size:
+  desc: null
+  value: 16
+seq_length:
+  desc: null
+  value: 512
+gradient_accumulation_steps:
+  desc: null
+  value: 1
+load_in_8bit:
+  desc: null
+  value: false
+load_in_4bit:
+  desc: null
+  value: false
+use_peft:
+  desc: null
+  value: true
+trust_remote_code:
+  desc: null
+  value: false
+output_dir:
+  desc: null
+  value: ./output/finance-alpaca_20000_fedavg_c10s5_i10_b16a1_l512_r32a64_20240708141845
+peft_lora_r:
+  desc: null
+  value: 32
+peft_lora_alpha:
+  desc: null
+  value: 64
+logging_steps:
+  desc: null
+  value: 100
+use_auth_token:
+  desc: null
+  value: false
+num_train_epochs:
+  desc: null
+  value: 3
+max_steps:
+  desc: null
+  value: 10
+save_steps:
+  desc: null
+  value: 1000
+save_total_limit:
+  desc: null
+  value: 10
+push_to_hub:
+  desc: null
+  value: false
+hub_model_id:
+  desc: null
+  value: null
+gradient_checkpointing:
+  desc: null
+  value: true
+template:
+  desc: null
+  value: alpaca
+seed:
+  desc: null
+  value: 2023
+dpo_beta:
+  desc: null
+  value: 0.1
+dataset_sample:
+  desc: null
+  value: 20000
+local_data_dir:
+  desc: null
+  value: null
+_wandb:
+  desc: null
+  value:
+    python_version: 3.10.14
+    cli_version: 0.17.4
+    framework: huggingface
+    huggingface_version: 4.31.0
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1720466328
+    t:
+      1:
+      - 1
+      - 11
+      - 49
+      - 51
+      - 55
+      - 71
+      - 84
+      - 98
+      2:
+      - 1
+      - 11
+      - 49
+      - 51
+      - 55
+      - 71
+      - 84
+      - 98
+      3:
+      - 16
+      - 23
+      4: 3.10.14
+      5: 0.17.4
+      6: 4.31.0
+      8:
+      - 5
+      13: linux-x86_64

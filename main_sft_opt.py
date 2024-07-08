@@ -20,14 +20,14 @@ python main_sft_opt.py \
     --dataset_name gbharti/finance-alpaca \
     --dataset_sample 20000 \
     --fed_alg fedavg \
-    --num_clients 10 \
+    --num_clients 5 \
     --sample_clients 5 \
     --max_steps 10 \
     --num_rounds 100 \
     --batch_size 16 \
     --gradient_accumulation_steps 1 \
     --seq_length 512 \
-    --peft_lora_r 32 \
+    --peft_lora_r 64 \
     --peft_lora_alpha 64 \
     --use_peft True \
     --output_dir ./output \
@@ -105,9 +105,6 @@ for round in tqdm(range(fed_args.num_rounds)):
     clients_this_round = get_clients_this_round(fed_args, round)
 
     print(f">> ==================== Round {round+1} : {clients_this_round} ====================")
-
-    print(torch.cuda.is_available())
-    print(torch.cuda.current_device())
     
     for client in range(fed_args.num_clients):
 
