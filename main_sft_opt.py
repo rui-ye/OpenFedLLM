@@ -24,12 +24,12 @@ python main_sft_opt.py \
     --sample_clients 2 \
     --max_steps 10 \
     --num_rounds 100 \
-    --batch_size 32 \
+    --batch_size 16 \
     --gradient_accumulation_steps 1 \
     --seq_length 512 \
     --peft_lora_r 32 \
     --peft_lora_alpha 32 \
-    --use_peft \
+    --use_peft False \
     --output_dir ./output \
     --template alpaca
 """
