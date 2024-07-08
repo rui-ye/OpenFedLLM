@@ -18,7 +18,7 @@ from config import get_config, save_config, get_model_config, get_training_args
 python main_sft_opt.py \
     --model_name_or_path facebook/opt-125m \
     --dataset_name vicgalle/alpaca-gpt4 \
-    --dataset_sample 10000 \
+    --dataset_sample 20000 \
     --fed_alg fedavg \
     --num_clients 10 \
     --sample_clients 2 \
@@ -92,7 +92,7 @@ proxy_dict, opt_proxy_dict = get_proxy_dict(fed_args, global_dict)
 global_auxiliary, auxiliary_model_list, auxiliary_delta_dict = get_auxiliary_dict(fed_args, global_dict)
 
 # ===== Define the tokenizer =====
-tokenizer = AutoTokenizer.from_pretrained(script_args.model_name_or_path, use_fast=False, padding_side="right", cache_dir='/lcrc/project/NEXTGENOPT/yijiang/cache')
+tokenizer = AutoTokenizer.from_pretrained(script_args.model_name_or_path, use_fast=False, padding_side="right")
 if tokenizer.pad_token is None:
     tokenizer.pad_token = tokenizer.unk_token   # following vicuna
 
