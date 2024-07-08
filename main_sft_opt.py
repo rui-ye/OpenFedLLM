@@ -5,13 +5,33 @@ from tqdm import tqdm
 import numpy as np
 
 import torch
-from transformers import LlamaForCausalLM, OPTForCausalLM, AutoModelForCausalLM, AutoTokenizer
+from transformers import OPTForCausalLM, AutoTokenizer
 from trl import DataCollatorForCompletionOnlyLM
 from peft import get_peft_model, get_peft_model_state_dict, set_peft_model_state_dict, prepare_model_for_kbit_training
 
 from utils import *
 from federated_learning import *
 from config import get_config, save_config, get_model_config, get_training_args
+
+"""
+python main_sft_opt.py \
+    --model_name_or_path facebook/opt-125m \
+    --dataset_name vicgalle/alpaca-gpt4 \
+    --dataset_sample 2000 \
+    --fed_alg fedavg \
+    --num_clients 10 \
+    --sample_clients 2 \
+    --max_steps 10 \
+    --num_rounds 10 \
+    --batch_size 16 \
+    --gradient_accumulation_steps 1 \
+    --seq_length 512 \
+    --peft_lora_r 8 \
+    --peft_lora_alpha 16 \
+    --use_peft \
+    --output_dir ./output \
+    --template alpaca
+"""
 
 # ===== Define the arguments =====
 script_args, fed_args, peft_config = get_config()
@@ -39,7 +59,6 @@ model = OPTForCausalLM.from_pretrained(
     # trust_remote_code=script_args.trust_remote_code,
     torch_dtype='auto',
 )
-# model = LlamaForCausalLM.from_pretrained(script_args.model_name_or_path, torch_dtype='auto', cache_dir='/lcrc/project/NEXTGENOPT/yijiang/cache')
 
 # ===== Load quantized LLM if specified =====
 if script_args.load_in_8bit or script_args.load_in_4bit:
@@ -48,8 +67,11 @@ if script_args.load_in_8bit or script_args.load_in_4bit:
             )
 
 # ===== Apply parameter-efficient fine-tuning =====
-model = get_peft_model(model, peft_config)
-model.print_trainable_parameters()
+if script_args.use_peft:
+    model = get_peft_model(model, peft_config)
+    model.print_trainable_parameters()
+else:
+    print("############### PEFT is not used. ###################")
 
 model.config.use_cache = False  # silence the warnings. Please re-enable for inference!
 
@@ -57,7 +79,10 @@ if training_args.gradient_checkpointing:
     model.enable_input_require_grads()
 
 # ===== Define the global and local models =====
-global_dict = copy.deepcopy(get_peft_model_state_dict(model))
+if script_args.use_peft:
+    global_dict = copy.deepcopy(get_peft_model_state_dict(model))
+else:
+    global_dict = model.state_dict()
 local_dict_list = [copy.deepcopy(global_dict) for i in range(fed_args.num_clients)]
 proxy_dict, opt_proxy_dict = get_proxy_dict(fed_args, global_dict)
 global_auxiliary, auxiliary_model_list, auxiliary_delta_dict = get_auxiliary_dict(fed_args, global_dict)
@@ -90,7 +115,10 @@ for round in tqdm(range(fed_args.num_rounds)):
             training_loss[client].append(-1)            # -1 is an indicator of not training
             continue
 
-        set_peft_model_state_dict(model, global_dict)   # sync the global model to the local model
+        if script_args.use_peft:
+            set_peft_model_state_dict(model, global_dict)   # sync the global model to the local model
+        else:
+            model.load_state_dict(global_dict)
 
         sub_dataset = get_dataset_this_round(local_datasets[client], round, fed_args, script_args)      # get the required sub-dataset for this round
         new_lr = cosine_learning_rate(round, fed_args.num_rounds, script_args.learning_rate, 1e-6)      # manually schedule the learning rate
@@ -118,15 +146,21 @@ for round in tqdm(range(fed_args.num_rounds)):
         if fed_args.fed_alg == 'scaffold':
             auxiliary_model_list[client], auxiliary_delta_dict[client] = trainer.get_auxiliary_param()
 
-        local_dict_list[client] = copy.deepcopy(get_peft_model_state_dict(model))   # copy is needed!
-
+        if script_args.use_peft:
+            local_dict_list[client] = copy.deepcopy(get_peft_model_state_dict(model))   # copy is needed!
+        else:
+            local_dict_list[client] = copy.deepcopy(model.state_dict())
+            
     # ===== Server aggregates the local models =====
     global_dict, global_auxiliary = global_aggregate(
         fed_args, global_dict, local_dict_list, sample_num_list, \
         clients_this_round, round, proxy_dict=proxy_dict, \
         opt_proxy_dict=opt_proxy_dict, auxiliary_info=(global_auxiliary, auxiliary_delta_dict)
     )
-    set_peft_model_state_dict(model, global_dict)   # Update global model
+    if script_args.use_peft:
+        set_peft_model_state_dict(model, global_dict)   # Update global model
+    else:
+        model.load_state_dict(global_dict)
 
     # ===== Save the model =====
     if (round+1) % fed_args.save_model_freq == 0:
