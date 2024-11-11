@@ -32,7 +32,7 @@ def get_fed_local_sft_trainer(script_args, fed_args, model, tokenizer, training_
             global_auxiliary=global_auxiliary,
         )
         trainer.add_callback(SCAFFOLD_Callback(trainer.correction, model))
-    elif (fed_args.fed_alg in ['fedavg']) or (fed_args.fed_alg).startswith('local'):
+    elif (fed_args.fed_alg in ['fedavg', 'fedavgm', 'fedadgrad', 'fedyogi', 'fedadam']) or (fed_args.fed_alg).startswith('local'):
         trainer = SFTTrainer(
             model=model,
             tokenizer=tokenizer,

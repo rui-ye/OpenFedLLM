@@ -29,7 +29,7 @@ def get_fed_local_dpo_trainer(script_args, fed_args, model, model_ref, tokenizer
                             global_auxiliary=global_auxiliary,
                             )
         trainer.add_callback(SCAFFOLD_Callback(trainer.correction, model))
-    else: # such as fedavg, local0
+    elif (fed_args.fed_alg in ['fedavg', 'fedavgm', 'fedadgrad', 'fedyogi', 'fedadam']) or (fed_args.fed_alg).startswith('local'):
         trainer = DPOTrainer(
                             model=model,
                             ref_model=model_ref,
@@ -38,6 +38,8 @@ def get_fed_local_dpo_trainer(script_args, fed_args, model, model_ref, tokenizer
                             train_dataset=local_dataset,
                             tokenizer=tokenizer,
                             )
+    else:
+        raise ValueError(f'Unsupported `fed_alg`: {fed_args.fed_alg}')
     return trainer
 
 class DPOTrainerFedProx(DPOTrainer):
