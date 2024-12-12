@@ -1,6 +1,6 @@
 # OpenFedLLM: Training Large Language Models on Decentralized Private Data via Federated Learning
 
-**OpenFedLLM** is an open-source research-use codebase for training *Large Language Models (LLM)* via federated learning. Please check our [paper](https://arxiv.org/abs/2402.06954) for details and the corresponding empirical study.
+**OpenFedLLM** is an open-source research-use codebase for training *Large Language Models (LLM)* via federated learning (accepted by **KDD 2024**). Please check our [paper](https://arxiv.org/abs/2402.06954) for details and the corresponding empirical study.
 
 OpenFedLLM includes the following key features:
 - 7 **federated learning** algorithms (e.g., *FedAvg*, *FedProx*, *SCAFFOLD*, *FedAvgM*, etc.).
@@ -11,7 +11,9 @@ OpenFedLLM includes the following key features:
 ![intro](doc/assets/openfedllm-intro.png)
 
 ## News🔥
+- **2024-09:** FedLLM-Bench is accepted by **NeurIPS 2024** Datasets and Benchmarks Track!
 - **2024-06:** We released the first realistic benchmark for FedLLM: FedLLM-Bench. Check the [Paper](https://arxiv.org/pdf/2406.04845) | [Code](https://github.com/rui-ye/FedLLM-Bench).
+- **2024-05:** OpenFedLLM is accepted by **KDD 2024**!.
 
 ## Setup
 
@@ -88,10 +90,11 @@ For example, `evaluation/open_ended/` include open-ended evaluations on three be
 Please cite our paper if you find the repository helpful.
 
 ```
-@article{ye2024openfedllm,
-  title={OpenFedLLM: Training Large Language Models on Decentralized Private Data via Federated Learning},
+@inproceedings{ye2024openfedllm,
+  title={Openfedllm: Training large language models on decentralized private data via federated learning},
   author={Ye, Rui and Wang, Wenhao and Chai, Jingyi and Li, Dihan and Li, Zexi and Xu, Yinda and Du, Yaxin and Wang, Yanfeng and Chen, Siheng},
-  journal={arXiv preprint arXiv:2402.06954},
+  booktitle={Proceedings of the 30th ACM SIGKDD Conference on Knowledge Discovery and Data Mining},
+  pages={6137--6147},
   year={2024}
 }
 ```
